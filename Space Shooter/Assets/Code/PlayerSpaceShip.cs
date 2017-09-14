@@ -8,6 +8,7 @@ namespace SpaceShooter
 	{
 		public const string HorizontalAxis = "Horizontal";
 		public const string VerticalAxis = "Vertical";
+		public const string FireButtonName = "Fire1";
 
 		private Vector3 GetInputVector()
 		{
@@ -15,6 +16,16 @@ namespace SpaceShooter
 			float verticalInput = Input.GetAxis(VerticalAxis);
 
 			return new Vector3(horizontalInput, verticalInput);
+		}
+
+		protected override void Update()
+		{
+			base.Update();
+
+			if(Input.GetButton(FireButtonName))
+			{
+				Shoot();
+			}
 		}
 
 		protected override void Move()
