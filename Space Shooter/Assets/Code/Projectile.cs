@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace SpaceShooter
 {
+	[RequireComponent(typeof(Rigidbody2D))]
 	public class Projectile : MonoBehaviour, IDamageProvider
 	{
-		[SerializeField]
+		[SerializeField, UsedImplicitly]
 		private int _damage;
 		[SerializeField]
 		private float _speed;
@@ -36,8 +38,20 @@ namespace SpaceShooter
 			// Current position can be read from transform
 			Vector2 currentPosition =
 				new Vector2(transform.position.x, transform.position.y);
+			// New position can be calculated by adding velocity to current position
 			Vector2 newPosition = currentPosition + velocity * Time.fixedDeltaTime;
 			_rigidbody.MovePosition(newPosition);
+		}
+
+		protected void OnTriggerEnter2D(Collider2D other)
+		{
+			IDamageReceiver damageReceiver = other.GetComponent<IDamageReceiver>();
+			if(damageReceiver != null)
+			{
+				Debug.Log("Hit a damage receiver.");
+				damageReceiver.TakeDamage(GetDamage());
+				Destroy(gameObject);
+			}
 		}
 
 		public void Launch(Vector2 direction)

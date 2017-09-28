@@ -10,6 +10,11 @@ namespace SpaceShooter
 		public const string VerticalAxis = "Vertical";
 		public const string FireButtonName = "Fire1";
 
+		public override Type UnitType
+		{
+			get { return Type.Player; }
+		}
+
 		private Vector3 GetInputVector()
 		{
 			float horizontalInput = Input.GetAxis(HorizontalAxis);
