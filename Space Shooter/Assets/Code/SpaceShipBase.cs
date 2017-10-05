@@ -48,6 +48,11 @@ namespace SpaceShooter
 			// If the parameter 'includeInactive' is set true, the components are fetched
 			// form inactive child GameObjects too.
 			_weapons = GetComponentsInChildren<Weapon>(includeInactive: true);
+			foreach(Weapon weapon in _weapons)
+			{
+				// Initialize all the weapons.
+				weapon.Init(this);
+			}
 
 			Health = GetComponent<IHealth>();
 		}

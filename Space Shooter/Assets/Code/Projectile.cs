@@ -16,9 +16,13 @@ namespace SpaceShooter
 		private Rigidbody2D _rigidbody;
 		private Vector2 _direction;
 		private bool _isLaunched = false;
+		private Weapon _weapon;
+		private AudioSource _audio;
 
 		protected virtual void Awake()
 		{
+			_audio = GetComponent<AudioSource>();
+
 			_rigidbody = GetComponent<Rigidbody2D>();
 
 			if (_rigidbody == null)
@@ -50,14 +54,22 @@ namespace SpaceShooter
 			{
 				Debug.Log("Hit a damage receiver.");
 				damageReceiver.TakeDamage(GetDamage());
-				Destroy(gameObject);
+			}
+
+			if ( !_weapon.DisposeProjectile( this ) )
+			{
+				Debug.LogError( "Could not return the projectile back to pool!" );
+				Destroy( gameObject );
 			}
 		}
 
-		public void Launch(Vector2 direction)
+		public void Launch(Weapon weapon, Vector2 direction)
 		{
+			_weapon = weapon;
 			_direction = direction;
 			_isLaunched = true;
+
+			_audio.PlayOneShot(_audio.clip, 1);
 		}
 
 		public int GetDamage()
