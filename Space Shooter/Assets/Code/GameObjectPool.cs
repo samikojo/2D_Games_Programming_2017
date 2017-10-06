@@ -5,19 +5,25 @@ namespace SpaceShooter
 {
 	public class GameObjectPool : MonoBehaviour
 	{
+		// The initial size of the pool.
 		[SerializeField]
 		private int _poolSize;
+
+		// The prefab from which all objects in the pool are instantiated.
 		[SerializeField]
 		private GameObject _objectPrefab;
+
 		// When the pool runs out of objects, should the pool grow or just
 		// return null.
 		[SerializeField]
 		private bool _shouldGrow;
 
+		// The list containing all the objects in this pool.
 		private List<GameObject> _pool;
 
 		protected void Awake()
 		{
+			// Initialize the pool by adding '_poolSize' amount of objects to the pool.
 			_pool = new List<GameObject>(_poolSize);
 
 			for(int i = 0; i < _poolSize; ++i)
@@ -26,6 +32,11 @@ namespace SpaceShooter
 			}
 		}
 
+		/// <summary>
+		/// Adds an object to the pool.
+		/// </summary>
+		/// <param name="isActive">Should the object be active when it is added to the pool or not.</param>
+		/// <returns>The object added to the pool.</returns>
 		private GameObject AddObject( bool isActive = false )
 		{
 			GameObject go = Instantiate(_objectPrefab);
@@ -44,16 +55,28 @@ namespace SpaceShooter
 			return go;
 		}
 
+		/// <summary>
+		/// Called when the object is returned to the pool. Deactivates the object.
+		/// </summary>
+		/// <param name="go">Object to deactivate</param>
 		protected virtual void Deactivate(GameObject go)
 		{
 			go.SetActive(false);
 		}
 
+		/// <summary>
+		/// Called when the object is fetched from the pool. Activates the object.
+		/// </summary>
+		/// <param name="go">Object to activate</param>
 		protected virtual void Activate(GameObject go)
 		{
 			go.SetActive(true);
 		}
 
+		/// <summary>
+		/// Fetches the object form the pool.
+		/// </summary>
+		/// <returns>An object from the pool or if all objects are already in use and pool cannot grow, returns null</returns>
 		public GameObject GetPooledObject()
 		{
 			GameObject result = null;
@@ -62,7 +85,7 @@ namespace SpaceShooter
 				if ( _pool[i].activeSelf == false )
 				{
 					result = _pool[i];
-					break;
+					break; // Jumps out from the loop.
 				}
 			}
 
@@ -82,6 +105,11 @@ namespace SpaceShooter
 			return result;
 		}
 
+		/// <summary>
+		/// Returns an object back to the pool.
+		/// </summary>
+		/// <param name="go">The object which should be returned to the pool.</param>
+		/// <returns>Could the object be returned back to the pool.</returns>
 		public bool ReturnObject(GameObject go)
 		{
 			bool result = false;
@@ -94,6 +122,11 @@ namespace SpaceShooter
 					result = true;
 					break;
 				}
+			}
+
+			if (!result)
+			{
+				Debug.LogError("Tried to return an object which doesn't belong to this pool!");
 			}
 
 			return result;
