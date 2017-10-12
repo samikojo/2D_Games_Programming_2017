@@ -34,14 +34,16 @@ namespace SpaceShooter
 				projectile.transform.position = transform.position;
 				projectile.transform.rotation = transform.rotation;
 				projectile.Launch(this, transform.up);
+
+				// Go to the cooldown phase.
+				_isInCooldown = true;
+				// We just shot the projectile so time since shot is 0.
+				_timeSinceShot = 0;
+
+				return true;
 			}
 
-			// Go to the cooldown phase.
-			_isInCooldown = true;
-			// We just shot the projectile so time since shot is 0.
-			_timeSinceShot = 0;
-
-			return true;
+			return false;
 		}
 
 		public bool DisposeProjectile( Projectile projectile )
