@@ -9,6 +9,7 @@ namespace SpaceShooter
 		[SerializeField] private int _maxHealth;
 
 		private int _currentHealth;
+		private bool _isImmortal = false;
 
 		public int CurrentHealth
 		{
@@ -33,14 +34,22 @@ namespace SpaceShooter
 		}
 
 		public void DecreaseHealth(int amount)
-		{
-			// CurrentHealth = CurrentHealth - amount;
-			CurrentHealth -= amount;
+		{			
+			if (!_isImmortal)
+			{
+				// CurrentHealth = CurrentHealth - amount;
+				CurrentHealth -= amount;
+			}
 		}
 
 		public void IncreaseHealth(int amount)
 		{
 			CurrentHealth += amount;
+		}
+
+		public void SetImmortal(bool isImmortal)
+		{
+			_isImmortal = isImmortal;
 		}
 	}
 }

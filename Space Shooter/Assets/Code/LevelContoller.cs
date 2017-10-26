@@ -34,6 +34,9 @@ namespace SpaceShooter
 		[SerializeField]
 		private GameObjectPool _enemyProjectilePool;
 
+		[SerializeField]
+		private Spawner _playerSpawner;
+
 		// Amount of enemies spawned so far.
 		private int _enemyCount;
 
@@ -59,10 +62,13 @@ namespace SpaceShooter
 		protected void Start()
 		{
 			// Starts a new coroutine.
-			StartCoroutine(SpawnRoutine());
+			StartCoroutine(SpawnEnemyRoutine());
+			SpawnPlayer();
+
+			Debug.Log("Current score: " + GameManager.Instance.CurrentScore);
 		}
 
-		private IEnumerator SpawnRoutine()
+		private IEnumerator SpawnEnemyRoutine()
 		{
 			// Wait for a while before spawning the first enemy.
 			yield return new WaitForSeconds(_waitToSpawn);
@@ -82,6 +88,20 @@ namespace SpaceShooter
 				}
 				yield return new WaitForSeconds(_spawnInterval);
 			}
+		}
+
+		public PlayerSpaceShip SpawnPlayer()
+		{
+			PlayerSpaceShip player = null;
+			GameObject playerObject = _playerSpawner.Spawn();
+			if (playerObject != null)
+			{
+				player = playerObject.GetComponent<PlayerSpaceShip>();
+			}
+
+			player.BecomeImmortal();
+
+			return player;
 		}
 
 		private EnemySpaceShip SpawnEnemyUnit()
@@ -134,6 +154,18 @@ namespace SpaceShooter
 			else
 			{
 				return _enemyProjectilePool.ReturnObject(projectile.gameObject);
+			}
+		}
+
+		public void LivesLost()
+		{
+			if(GameManager.Instance.CurrentLives <= 0)
+			{
+				// TODO: Game Over!
+			}
+			else
+			{
+				SpawnPlayer();
 			}
 		}
 	}
