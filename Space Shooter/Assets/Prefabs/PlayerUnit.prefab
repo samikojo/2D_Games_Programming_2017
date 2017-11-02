@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0059cfdba0be1bd4082c9666087c0091, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cooldownTime: 0.5
+  _cooldownTime: 0.1
   _projectilePrefab: {fileID: 114088663366416032, guid: c0247a85493bbc54a8f47a7a2c9dbd81,
     type: 2}
 --- !u!114 &114535164535761890
@@ -145,6 +145,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 5
+  _immortalTime: 1
 --- !u!212 &212824809356921158
 SpriteRenderer:
   m_ObjectHideFlags: 1

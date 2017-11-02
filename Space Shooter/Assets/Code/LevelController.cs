@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SpaceShooter.States;
 
 namespace SpaceShooter
 {
-	public class LevelContoller : MonoBehaviour
+	public class LevelController : MonoBehaviour
 	{
-		public static LevelContoller Current
+		public static LevelController Current
 		{
 			get; private set;
 		}
@@ -37,8 +38,19 @@ namespace SpaceShooter
 		[SerializeField]
 		private Spawner _playerSpawner;
 
+		[SerializeField]
+		private int _targetEnemiesKilled = 5;
+
+		[SerializeField]
+		private GameStateType _nextState;
+
+		[SerializeField]
+		private bool _isLastLevel = false;
+
 		// Amount of enemies spawned so far.
 		private int _enemyCount;
+
+		private int _killedEnemies = 0;
 
 		protected void Awake()
 		{
@@ -64,8 +76,6 @@ namespace SpaceShooter
 			// Starts a new coroutine.
 			StartCoroutine(SpawnEnemyRoutine());
 			SpawnPlayer();
-
-			Debug.Log("Current score: " + GameManager.Instance.CurrentScore);
 		}
 
 		private IEnumerator SpawnEnemyRoutine()
@@ -87,6 +97,23 @@ namespace SpaceShooter
 					yield break; // Stops the execution of this coroutine.
 				}
 				yield return new WaitForSeconds(_spawnInterval);
+			}
+		}
+
+		public void EnemyDestroyed()
+		{
+			_killedEnemies++;
+			if(_killedEnemies >= _targetEnemiesKilled)
+			{
+				if(_isLastLevel)
+				{
+					GameManager.Instance.PlayerWins = true;
+				}
+
+				if( GameStateController.PerformTransition(_nextState) == false)
+				{
+					Debug.LogError("Could not change state to " + _nextState);
+				}
 			}
 		}
 
@@ -161,7 +188,7 @@ namespace SpaceShooter
 		{
 			if(GameManager.Instance.CurrentLives <= 0)
 			{
-				// TODO: Game Over!
+				GameStateController.PerformTransition(GameStateType.GameOver);
 			}
 			else
 			{

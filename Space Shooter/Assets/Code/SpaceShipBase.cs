@@ -104,15 +104,5 @@ namespace SpaceShooter
 		{
 			Destroy(gameObject);
 		}
-
-		protected Projectile GetPooledProjectile()
-		{
-			return LevelContoller.Current.GetProjectile(UnitType);
-		}
-
-		protected bool ReturnPooledProjectile(Projectile projectile)
-		{
-			return LevelContoller.Current.ReturnProjectile(UnitType, projectile);
-		}
 	}
 }

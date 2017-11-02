@@ -28,7 +28,7 @@ namespace SpaceShooter
 			}
 			
 			// Get the projectile from the pool and set its position and rotation.
-			Projectile projectile = LevelContoller.Current.GetProjectile(_owner.UnitType);
+			Projectile projectile = LevelController.Current.GetProjectile(_owner.UnitType);
 			if(projectile != null)
 			{
 				projectile.transform.position = transform.position;
@@ -48,7 +48,7 @@ namespace SpaceShooter
 
 		public bool DisposeProjectile( Projectile projectile )
 		{
-			return LevelContoller.Current.ReturnProjectile(_owner.UnitType, projectile);
+			return LevelController.Current.ReturnProjectile(_owner.UnitType, projectile);
 		}
 		
 		void Update()

@@ -633,11 +633,13 @@ MonoBehaviour:
   - {fileID: 1957481618}
   _spawnInterval: 1
   _waitToSpawn: 1
-  _maxEnemyUnitsToSpawn: 5
+  _maxEnemyUnitsToSpawn: 10
   _playerProjectilePool: {fileID: 1639953652}
   _enemyProjectilePool: {fileID: 164690861}
-  _immortalTime: 1
   _playerSpawner: {fileID: 1098608478}
+  _targetEnemiesKilled: 5
+  _nextState: 2
+  _isLastLevel: 0
 --- !u!4 &1240467371
 Transform:
   m_ObjectHideFlags: 0
