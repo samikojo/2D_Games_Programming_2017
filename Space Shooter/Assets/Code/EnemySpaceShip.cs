@@ -37,6 +37,8 @@ namespace SpaceShooter
 
 		protected override void Die()
 		{
+            LevelController.Current.SpawnPowerup(transform.position);
+
 			base.Die();
 			if(LevelController.Current != null)
 			{

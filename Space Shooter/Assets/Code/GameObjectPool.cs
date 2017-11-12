@@ -39,7 +39,8 @@ namespace SpaceShooter
 		/// <returns>The object added to the pool.</returns>
 		private GameObject AddObject( bool isActive = false )
 		{
-			GameObject go = Instantiate(_objectPrefab);
+            // Instantiate pooled objects under this parent.
+			GameObject go = Instantiate(_objectPrefab, transform);
 
 			if(isActive)
 			{

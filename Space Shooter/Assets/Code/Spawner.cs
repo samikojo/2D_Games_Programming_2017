@@ -11,8 +11,10 @@ namespace SpaceShooter
 
 		public GameObject Spawn()
 		{
+            // Spawn with spawner as the parent.
 			GameObject spawnedObject = Instantiate(_prefabToSpawn,
-				transform.position, transform.rotation);
+				transform.position, transform.rotation, transform);
+
 			return spawnedObject;
 		}
 	}
