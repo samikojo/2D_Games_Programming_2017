@@ -19,7 +19,7 @@ namespace SpaceShooter
 		[SerializeField]
 		private float _speed = 1.5f;
 
-		private Weapon[] _weapons;
+		protected Weapon[] _weapons;
 
 		// A property for accessing _speed variable. Getter is set public so the value
 		// can be read anywhere. Setter is protected which means that the value can be
@@ -57,6 +57,17 @@ namespace SpaceShooter
 			Health = GetComponent<IHealth>();
 		}
 
+        // Updates the weapons array to match current weapon loadout.
+        protected void UpdateWeapons()
+        {
+            _weapons = GetComponentsInChildren<Weapon>(includeInactive: true);
+            foreach (Weapon weapon in _weapons)
+            {
+                // Initialize all the weapons.
+                weapon.Init(this);
+            }
+        }
+
 		protected void Shoot()
 		{
 			// Go through every weapon which is stored to the Weapons array and call their
@@ -90,7 +101,7 @@ namespace SpaceShooter
 			}
 		}
 
-		public void TakeDamage(int amount)
+		public virtual void TakeDamage(int amount)
 		{
 			Health.DecreaseHealth(amount);
 
@@ -98,11 +109,16 @@ namespace SpaceShooter
 			{
 				Die();
 			}
-		}
+        }
 
-		protected virtual void Die()
+        public virtual void TakeHealth(int amount)
+        {
+            Health.IncreaseHealth(amount);
+        }
+
+        protected virtual void Die()
 		{
 			Destroy(gameObject);
 		}
-	}
+    }
 }

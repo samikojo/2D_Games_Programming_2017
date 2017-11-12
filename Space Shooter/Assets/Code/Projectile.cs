@@ -52,7 +52,7 @@ namespace SpaceShooter
 			IDamageReceiver damageReceiver = other.GetComponent<IDamageReceiver>();
 			if(damageReceiver != null)
 			{
-				Debug.Log("Hit a damage receiver.");
+				// Debug.Log("Hit a damage receiver.");
 				damageReceiver.TakeDamage(GetDamage());
 			}
 

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SpaceShooter.States;
+using TMPro;
 
 namespace SpaceShooter
 {
@@ -47,12 +48,28 @@ namespace SpaceShooter
 		[SerializeField]
 		private bool _isLastLevel = false;
 
-		// Amount of enemies spawned so far.
-		private int _enemyCount;
+        // Reference to the text that shows player health.
+        [SerializeField]
+        private TextMeshProUGUI _heathText;
+
+        // Reference to text that shows weapon powerup information
+        [SerializeField]
+        private TextMeshProUGUI _powerupText;
+
+        [SerializeField]
+        private float _powerupSpawnProbability = 0.3f;
+
+        [SerializeField] GameObject[] _powerups;
+
+        private bool _playerImmortal = false;
+
+        // Amount of enemies spawned so far.
+        private int _enemyCount;
 
 		private int _killedEnemies = 0;
 
-		protected void Awake()
+
+        protected void Awake()
 		{
 			if(Current == null)
 			{
@@ -69,6 +86,24 @@ namespace SpaceShooter
 				//_enemySpawner = GameObject.FindObjectOfType<Spawner>();
 				_enemySpawner = GetComponentInChildren<Spawner>();
 			}
+
+            // Sanity checks about interface texts:
+            if (_heathText == null || _powerupText == null)
+            {
+                GameObject temp = GameObject.Find("HealthText");
+
+                if (temp != null)
+                    _heathText = temp.GetComponent<TextMeshProUGUI>();
+                else
+                    Debug.Log("PowerupText not found!");
+
+                temp = GameObject.Find("PowerupText");
+
+                if (temp != null)
+                    _powerupText = temp.GetComponent<TextMeshProUGUI>();
+                else
+                    Debug.Log("PowerupText not found!");
+            }
 		}
 
 		protected void Start()
@@ -195,5 +230,72 @@ namespace SpaceShooter
 				SpawnPlayer();
 			}
 		}
+
+        // Updates the amount of health the player has on the screen.
+        public void UpdateHealth(int health)
+        {
+            if (!_playerImmortal)
+            {
+                _heathText.text = "Health: " + health;
+            }
+        }
+
+        // Used to show player information about powerup duration.
+        public void UpdatePowerup(string text)
+        {
+            _powerupText.text = text;
+        }
+
+        // Updates the healthText when player becomes immortal or becomes mortal
+        public void ToggleImmortal(bool immortal, int health)
+        {
+            _playerImmortal = immortal;
+
+            if (immortal)
+            {
+                _heathText.text = "Invulnerable";
+            }
+            else
+            {
+                UpdateHealth(health);
+            }
+        }
+
+        // Might spawn a random powerup if random number meets probability requirement.
+        public void SpawnPowerup(Vector3 position)
+        {
+            if (Random.value < _powerupSpawnProbability && _powerups.Length > 0)
+            {
+                /* Pick a random powerup to spawn.
+                 * Used whole float numbers to avoid fractions rounding up/down.
+                 */
+                int options = _powerups.Length;
+                float random = Random.value * (options * 1.0f);
+                float range = 1f;
+                float lowerLimit = 0f;
+                float upperLimit = 0f + range;
+
+                for (int i = 0; i < options; i++)
+                {
+                    if (lowerLimit <= random &&
+                        upperLimit >= random)
+                    {
+                        GameObject go = Instantiate<GameObject>(_powerups[i], position, Quaternion.identity, transform);
+                        Debug.Log("Spawned " + go);
+                        break;
+                    }
+                    else
+                    {
+                        lowerLimit += range;
+                        upperLimit += range;
+                    }
+                }
+            }
+            else
+            {
+                Debug.Log("Bad luck!");
+                return;
+            }
+        }
 	}
 }
